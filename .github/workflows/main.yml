@@ -28,7 +28,8 @@ jobs:
           echo "VPN connected successfully"
   deploy2:
     runs-on: ubuntu-latest
-    steps: 
+    needs: deploy1
+    steps:
       - name: Use SSH
         uses: appleboy/ssh-action@master
         with:
