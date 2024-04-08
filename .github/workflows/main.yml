@@ -26,7 +26,9 @@ jobs:
           echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
           echo "SESSION_PATH=$SESSION_PATH"
           echo "VPN connected successfully"
-     
+  deploy2:
+    runs-on: ubuntu-latest
+    steps: 
       - name: Use SSH
         uses: appleboy/ssh-action@master
         with:
