@@ -1,95 +1,3 @@
-# name: "hello"
-
-# on:
-#   workflow_dispatch:
-
-# jobs:
-#   hello:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-#       - name: My custom step
-#         uses: ./
-#         with:
-#           name: "selva"
-
-# name: GitHub Action
-
-# on:
-#   workflow_dispatch:
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v3
-#       - name: Install OpenVPN3
-#         run: |
-#           sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://packages.openvpn.net/packages-repo.gpg | sudo tee /etc/apt/keyrings/openvpn.asc
-#           DISTRO=$(lsb_release -c | awk '{print $2}')
-#           echo "deb [signed-by=/etc/apt/keyrings/openvpn.asc] https://packages.openvpn.net/openvpn3/debian $DISTRO main" | sudo tee /etc/apt/sources.list.d/openvpn-packages.list
-#           sudo apt update
-#           sudo apt install -y openvpn3
-#       - name: Connect to OpenVPN
-#         run: |
-#           # echo "Username: $USER"
-#           # echo "Password: $PASSWORD"
-#           echo "${{ secrets.USER }}"
-#           echo "${{ secrets.PASSWORD }}"
-#           printf "${{ secrets.USER }}\n${{ secrets.PASSWORD }}" | openvpn3 session-start --config .github/workflows/client.ovpn
-# - name: Terminate OpenVPN Session
-#   run: |
-#     sudo openvpn3 session-manage --disconnect-all
-# - name: Connect to OpenVPN
-#   run: |
-#     echo "${{ secrets.USER }}"
-#     echo "${{ secrets.PASSWORD }}"
-# - name: Connect to OpenVPN
-#   run: |
-# env:
-#   config_file: .github/workflows/client.ovpn
-#   username: ${{ secrets.USER }}
-#   password: ${{ secrets.PASSWORD }}
-
-# env:
-#   config_file: .github/workflows/client.ovpn
-#   username: ${{ secrets.USER }}
-#   password: ${{ secrets.PASSWORD }}
-# - name: Connect to VPN
-#   uses: "./actions/action1"
-#   with:
-#     config_file: .github/workflows/client.ovpn
-#     username: ${{ secrets.OVPN_USERNAME }}
-#     password: ${{ secrets.OVPN_PASSWORD }}
-
-# - name: Step 2 - Build and Push Docker Image
-#   uses: docker/build-push-action@v2
-#   with:
-#     username: ${{ secrets.DOCKER_USERNAME }}
-#     password: ${{ secrets.DOCKER_PASSWORD }}
-#     repository: your-docker-repo/image-name
-#     tags: latest
-
-# - name: Step 3 - SSH into Server and Run Container
-#   # uses: appleboy/ssh-action@master
-#   uses: ./actions/action2
-#   with:
-#     host: ${{ secrets.SERVER_HOST }}
-#     username: ${{ secrets.SERVER_USERNAME }}
-#     password: ${{ secrets.SERVER_PASSWORD }}
-#     port: ${{ secrets.SERVER_SSH_PORT }}
-#     script: |
-#       docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-#       docker pull your-docker-repo/image-name:latest
-#       docker run -d your-docker-repo/image-name:latest
-
-# - name: Step 4 - Terminate VPN Connection
-#   run: |
-
-# Working code is starting from here
 name: GitHub Action
 
 on:
@@ -119,33 +27,27 @@ jobs:
           echo "SESSION_PATH=$SESSION_PATH"
           echo "VPN connected successfully"
 
-      # - name: Deployment
-      #   run: |
-      #     echo "Deploying to test environment"
-      #     ssh -v -i $DEV_SSH_KEY root@143.110.183.102
-      # - name: Deployment
-      #   run: |
-      #     echo "Deploying to test environment"
-      #     mkdir -p ~/.ssh/
-      #     echo "${{ secrets.DEV_SSH_KEY }}" | base64 -d > ~/.ssh/id_rsa
-      #     chmod 400 ~/.ssh/id_rsa
-      #     ssh-agent bash -c 'ssh-add ~/.ssh/id_rsa && ssh -T -v -i ~/.ssh/id_rsa root@143.110.183.102'
-        # env:
-        #   DEV_SSH_KEY: ${{ secrets.DEV_SSH_KEY }}
-        #   DEMO_USERNAME: ${{ secrets.DEMO_USERNAME }}
-        #   DEMO_IP: ${{ secrets.DEMO_IP }}
-        #   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        #   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: session
+        run: |
+          echo "${{ secrets.DEMO_IP }}"
+          echo "${{ secrets.DEMO_USERNAME }}"
+          echo "${{ secrets.DEV_SSH_KEY }}"
+          openvpn3 sessions-list
 
-        # env:
-        #   DEV_SSH_KEY: ${{ secrets.DEV_SSH_KEY }}
-        #   DEMO_USERNAME: ${{ secrets.DEMO_USERNAME }}
-        #   DEMO_IP: ${{ secrets.DEMO_IP }}
-        #   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        #   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Wait for VPN Connection
+        run: |
+          until ping -c1 "${{ secrets.VPNSERVER }}"; do sleep 2; done
+
+      - name: Use SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEMO_IP }}
+          username: ${{ secrets.DEMO_USER }}
+          key: ${{ secrets.DEV_SSH_KEY }}
+          script: |
+            whoami
 
       - name: Disconnect from OpenVPN
         run: |
           echo "Session Path: $SESSION_PATH"
           openvpn3 session-manage --session-path "$SESSION_PATH" --disconnect
-      #    ssh-agent bash -c 'echo "${{ secrets.PASSPHRASE }}"
