@@ -27,17 +27,10 @@ jobs:
           echo "SESSION_PATH=$SESSION_PATH"
           echo "VPN connected successfully"
 
-      - name: session
-        run: |
-          echo "${{ secrets.DEMO_IP }}"
-          echo "${{ secrets.DEMO_USERNAME }}"
-          # echo "${{ secrets.DEV_SSH_KEY }}"
-          openvpn3 sessions-list
-
       - name: Wait for VPN Connection
         run: |
           until ping -c1 "${{ secrets.VPNSERVER }}"; do sleep 2; done
-    
+
       - name: Use SSH
         uses: appleboy/ssh-action@master
         with:
@@ -45,13 +38,16 @@ jobs:
           username: ${{ secrets.DEMO_USERNAME }}
           key: ${{ secrets.DEV_SSH_KEY }}
           script: |
-              whoami
+            whoami
 
       - name: Disconnect from OpenVPN
         run: |
           echo "Session Path: $SESSION_PATH"
           openvpn3 session-manage --session-path "$SESSION_PATH" --disconnect
 
-     
-
-     
+      - name: session
+        run: |
+          echo "${{ secrets.DEMO_IP }}"
+          echo "${{ secrets.DEMO_USERNAME }}"
+          # echo "${{ secrets.DEV_SSH_KEY }}"
+          openvpn3 sessions-list
