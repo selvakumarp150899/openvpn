@@ -27,9 +27,9 @@ jobs:
           echo "SESSION_PATH=$SESSION_PATH"
           echo "VPN connected successfully"
 
-      - name: Wait for VPN Connection
-        run: |
-          until ping -c1 "${{ secrets.VPNSERVER }}"; do sleep 2; done
+      # - name: Wait for VPN Connection
+      #   run: |
+      #     until ping -c1 "${{ secrets.VPNSERVER }}"; do sleep 2; done
 
       - name: Use SSH
         uses: appleboy/ssh-action@master
