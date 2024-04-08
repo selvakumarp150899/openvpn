@@ -18,6 +18,7 @@ jobs:
           echo "deb [signed-by=/etc/apt/keyrings/openvpn.asc] https://packages.openvpn.net/openvpn3/debian $DISTRO main" | sudo tee /etc/apt/sources.list.d/openvpn-packages.list
           sudo apt update
           sudo apt install -y openvpn3
+
       - name: Connect to OpenVPN
         run: |
           printf "${{ secrets.USER }}\n${{ secrets.PASSWORD }}" | openvpn3 session-start --config .github/workflows/client.ovpn | grep 'Session path' | cut -d' ' -f3 > session_path.txt
@@ -25,21 +26,19 @@ jobs:
           echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
           echo "SESSION_PATH=$SESSION_PATH"
           echo "VPN connected successfully"
-      # deploy2:
-      #   runs-on: ubuntu-latest
-      #   needs: deploy1
-      #   steps:
+     
       - name: Use SSH
         uses: appleboy/ssh-action@master
         with:
-          host: 143.110.183.102
-          username: root
+          host: ${{ secrets.DEMO_IP }}
+          username: ${{ secrets.DEMO_USERNAME }}
           key: ${{ secrets.DEV_SSH_KEY }}
-          port: 22
+          port: ${{ secrets.PORT }}
           script: |
-            whoami
-            ls -al
-            exit
+            docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
+            docker pull yogeshyp/sampleclient:latest
+            docker run --name sample -p 4202:80 -d --rm sampleclient:latest
+
       - name: Disconnect from OpenVPN
         run: |
           echo "Session Path: $SESSION_PATH"
