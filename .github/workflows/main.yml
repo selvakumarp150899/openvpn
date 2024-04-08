@@ -27,18 +27,18 @@ jobs:
           echo "SESSION_PATH=$SESSION_PATH"
           echo "VPN connected successfully"
   
-  deploy2:
-    runs-on: ubuntu-latest    
-    needs: deploy1    
-    steps:
-      - name: Use SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.DEMO_IP }}
-          username: ${{ secrets.DEMO_USERNAME }}
-          key: ${{ secrets.DEV_SSH_KEY }}
-          script: |
-            whoami
+  # deploy2:
+  #   runs-on: ubuntu-latest    
+  #   needs: deploy1    
+  #   steps:
+  #     - name: Use SSH
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ secrets.DEMO_IP }}
+  #         username: ${{ secrets.DEMO_USERNAME }}
+  #         key: ${{ secrets.DEV_SSH_KEY }}
+  #         script: |
+  #           whoami
 
       - name: Disconnect from OpenVPN
         run: |
