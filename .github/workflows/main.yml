@@ -41,6 +41,7 @@ jobs:
           script: |
             whoami
             ls -al
+            exit
 
       - name: Disconnect from OpenVPN
         run: |
