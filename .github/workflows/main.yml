@@ -27,10 +27,10 @@ jobs:
           echo "SESSION_PATH=$SESSION_PATH"
           echo "VPN connected successfully"
 
-  deploy2:
-    runs-on: ubuntu-latest
-    needs: deploy1
-    steps:
+      # deploy2:
+      #   runs-on: ubuntu-latest
+      #   needs: deploy1
+      #   steps:
       - name: Use SSH
         uses: appleboy/ssh-action@master
         with:
