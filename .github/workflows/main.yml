@@ -44,6 +44,7 @@ jobs:
           host: ${{ secrets.DEMO_IP }}
           username: ${{ secrets.DEMO_USERNAME }}
           key: ${{ secrets.DEV_SSH_KEY }}
+          timeout: 120s
           script: |
             whoami
 
