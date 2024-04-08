@@ -31,12 +31,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: deploy1
     steps:
-      - name: session
-        run: |
-          echo "${{ secrets.DEMO_IP }}"
-          echo "${{ secrets.DEMO_USERNAME }}"
-          # echo "${{ secrets.DEV_SSH_KEY }}"
-          openvpn3 sessions-list
+      # - name: session
+      #   run: |
+      #     echo "${{ secrets.DEMO_IP }}"
+      #     echo "${{ secrets.DEMO_USERNAME }}"
+      #     # echo "${{ secrets.DEV_SSH_KEY }}"
+      #     openvpn3 sessions-list
 
       - name: Use SSH
         uses: appleboy/ssh-action@master
