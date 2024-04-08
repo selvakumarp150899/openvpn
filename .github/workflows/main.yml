@@ -31,8 +31,21 @@ jobs:
         run: |
           echo "${{ secrets.DEMO_IP }}"
           echo "${{ secrets.DEMO_USERNAME }}"
-          echo "${{ secrets.DEV_SSH_KEY }}"
+          # echo "${{ secrets.DEV_SSH_KEY }}"
           openvpn3 sessions-list
+
+      - name: Wait for VPN Connection
+        run: |
+          until ping -c1 "${{ secrets.VPNSERVER }}"; do sleep 2; done
+    
+      - name: Use SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEMO_IP }}
+          username: ${{ secrets.DEMO_USERNAME }}
+          key: ${{ secrets.DEV_SSH_KEY }}
+          script: |
+              whoami
 
       - name: Disconnect from OpenVPN
         run: |
@@ -41,15 +54,4 @@ jobs:
 
      
 
-      # - name: Wait for VPN Connection
-      #   run: |
-      #     until ping -c1 "${{ secrets.VPNSERVER }}"; do sleep 2; done
-
-      # - name: Use SSH
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.DEMO_IP }}
-      #     username: ${{ secrets.DEMO_USER }}
-      #     key: ${{ secrets.DEV_SSH_KEY }}
-      #     script: |
-      #       whoami
+     
