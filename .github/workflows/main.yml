@@ -34,10 +34,10 @@ jobs:
       - name: Use SSH
         uses: appleboy/ssh-action@master
         with:
-          host: 143.110.183.102
-          username: root
+          host: ${{ secrets.DEMO_IP }}
+          username: ${{ secrets.DEMO_USERNAME }}
           key: ${{ secrets.DEV_SSH_KEY }}
-          port: 22
+          port: ${{ secrets.PORT }}
           script: |
             whoami
             ls -al
