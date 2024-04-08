@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  deploy1:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,11 +26,11 @@ jobs:
           echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
           echo "SESSION_PATH=$SESSION_PATH"
           echo "VPN connected successfully"
-
-      # - name: Wait for VPN Connection
-      #   run: |
-      #     until ping -c1 "${{ secrets.VPNSERVER }}"; do sleep 2; done
-
+  
+  deploy2:
+    runs-on: ubuntu-latest    
+    needs: deploy1    
+    steps:
       - name: Use SSH
         uses: appleboy/ssh-action@master
         with:
@@ -45,9 +45,9 @@ jobs:
           echo "Session Path: $SESSION_PATH"
           openvpn3 session-manage --session-path "$SESSION_PATH" --disconnect
 
-      - name: session
-        run: |
-          echo "${{ secrets.DEMO_IP }}"
-          echo "${{ secrets.DEMO_USERNAME }}"
-          # echo "${{ secrets.DEV_SSH_KEY }}"
-          openvpn3 sessions-list
+      # - name: session
+      #   run: |
+      #     echo "${{ secrets.DEMO_IP }}"
+      #     echo "${{ secrets.DEMO_USERNAME }}"
+      #     # echo "${{ secrets.DEV_SSH_KEY }}"
+      #     openvpn3 sessions-list
