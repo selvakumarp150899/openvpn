@@ -34,10 +34,10 @@ jobs:
       - name: session-list
         run: |
           openvpn3 sessions-list
-  deploy2:
-    needs: deploy1
-    runs-on: ubuntu-latest
-    steps:
+  # deploy2:
+  #   needs: deploy1
+  #   runs-on: ubuntu-latest
+  #   steps:
       - name: Use SSH
         uses: appleboy/ssh-action@master
         with:
