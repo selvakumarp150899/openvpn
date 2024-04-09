@@ -25,22 +25,22 @@ jobs:
           echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
           echo "SESSION_PATH=$SESSION_PATH"
           echo "VPN connected successfully"
-    
-      # - name: Use SSH
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.DEMO_IP }}
-      #     username: ${{ secrets.DEMO_USERNAME }}
-      #     key: ${{ secrets.DEV_SSH_KEY }}
-      #     port: ${{ secrets.PORT }}
-      #     script: |
-      #       docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
-      #       docker pull yogeshyp/sampleclient:latest
-      #       docker run --name sample -p 7124:80 -d --rm yogeshyp/sampleclient:latest
+      - name: Use SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEMO_IP }}
+          username: ${{ secrets.DEMO_USERNAME }}
+          key: ${{ secrets.DEV_SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
+            docker pull yogeshyp/sampleclient:latest
+            docker run --name sample -p 7124:80 -d --rm yogeshyp/sampleclient:latest
       - name: Disconnect from OpenVPN
         run: |
           echo "Session Path: $SESSION_PATH"
           openvpn3 session-manage --session-path "$SESSION_PATH" --disconnect
+
 # name: GitHub Action
 
 # on:
