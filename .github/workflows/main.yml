@@ -33,6 +33,14 @@ jobs:
           echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
           echo "SESSION_PATH=$SESSION_PATH"
 
+      - name: session-list
+        run: |
+          openvpn3 sessions-list
+  
+  deploy2:
+    needs: deploy1
+    runs-on: ubuntu-latest
+    steps:
       - name: Use SSH
         uses: appleboy/ssh-action@master
         with:
