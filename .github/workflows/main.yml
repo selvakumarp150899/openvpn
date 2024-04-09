@@ -9,13 +9,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
       - name: Build Docker image
         run: |
           docker build -t "${{ secrets.IMAGE_NAME }}" .
           docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
-          # docker tag "${{ secrets.IMAGE_NAME }}" "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}"
-          docker push "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}":latest
+          docker tag "${{ secrets.IMAGE_NAME }}" "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}"
+          docker push "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}"
 
       - name: Install OpenVPN3
         run: |
@@ -24,12 +25,14 @@ jobs:
           echo "deb [signed-by=/etc/apt/keyrings/openvpn.asc] https://packages.openvpn.net/openvpn3/debian $DISTRO main" | sudo tee /etc/apt/sources.list.d/openvpn-packages.list
           sudo apt update
           sudo apt install -y openvpn3
+
       - name: Connect to OpenVPN
         run: |
           printf "${{ secrets.USER }}\n${{ secrets.PASSWORD }}" | openvpn3 session-start --config .github/workflows/client.ovpn | grep 'Session path' | cut -d' ' -f3 > session_path.txt
           SESSION_PATH=$(cat session_path.txt)
           echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
           echo "SESSION_PATH=$SESSION_PATH"
+
       - name: session-list
         run: |
           openvpn3 sessions-list
@@ -48,6 +51,7 @@ jobs:
             docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
             docker pull "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}"
             docker run --name sample -p 7124:80 -d --rm "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}"
+
       - name: Disconnect from OpenVPN
         run: |
           echo "Session Path: $SESSION_PATH"
