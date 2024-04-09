@@ -48,6 +48,7 @@ jobs:
           username: ${{ secrets.DEMO_USERNAME }}
           key: ${{ secrets.DEV_SSH_KEY }}
           port: ${{ secrets.PORT }}
+          timeout: 300s
           script: |
             docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
             docker pull yogeshyp/sampleclient:latest
