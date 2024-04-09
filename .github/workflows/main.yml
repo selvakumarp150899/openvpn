@@ -11,12 +11,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # - name: Build Docker image
-      #   run: |
-      #     docker build -t "${{ secrets.IMAGE_NAME }}" .
-      #     docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
-      #     docker tag "${{ secrets.IMAGE_NAME }}" "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG }}"
-      #     docker push "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG }}"
+      - name: Build Docker image
+        run: |
+          docker build -t "${{ secrets.IMAGE_NAME }}" .
+          docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
+          docker tag "${{ secrets.IMAGE_NAME }}" "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG }}"
+          docker push "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG }}"
 
       - name: Install OpenVPN3
         run: |
@@ -43,7 +43,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
-            docker pull "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}"
+            docker pull "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG }}"
             docker run --name sample -p 7124:80 -d --rm "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG }}"
 
       - name: Disconnect from OpenVPN
