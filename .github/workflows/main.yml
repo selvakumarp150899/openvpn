@@ -51,7 +51,7 @@ jobs:
           script: |
             docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
             docker pull yogeshyp/sampleclient:latest
-            docker run --name sample -p 4202:80 -d --rm yogeshyp/sampleclient:latest
+            docker run --name sample -p 4202 -d --rm yogeshyp/sampleclient:latest
 
       - name: Disconnect from OpenVPN
         run: |
