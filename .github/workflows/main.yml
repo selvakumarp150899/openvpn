@@ -10,13 +10,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
- 
-      - name: Build Docker image
-        run: |
-          docker build -t "${{ secrets.IMAGE_NAME }}" .
-          docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
-          docker tag "${{ secrets.IMAGE_NAME }}" "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG }}"
-          docker push "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG }}"
+
+      # - name: Build Docker image
+      #   run: |
+      #     docker build -t "${{ secrets.IMAGE_NAME }}" .
+      #     docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
+      #     docker tag "${{ secrets.IMAGE_NAME }}" "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG }}"
+      #     docker push "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG }}"
 
       - name: Install OpenVPN3
         run: |
@@ -33,7 +33,7 @@ jobs:
           echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
           echo "SESSION_PATH=$SESSION_PATH"
           echo "VPN connected successfully"
-    
+
       - name: Use SSH
         uses: appleboy/ssh-action@master
         with:
