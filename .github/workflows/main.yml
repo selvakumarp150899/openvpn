@@ -29,9 +29,9 @@ jobs:
       - name: Connect to OpenVPN
         run: |
           printf "${{ secrets.USER }}\n${{ secrets.PASSWORD }}" | openvpn3 session-start --config .github/workflows/client.ovpn
-          SESSION_PATH=$(cat session_path.txt)
-          echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
-          echo "SESSION_PATH=$SESSION_PATH"
+          # SESSION_PATH=$(cat session_path.txt)
+          # echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
+          # echo "SESSION_PATH=$SESSION_PATH"
 
       # - name: session-list
       #   run: |
