@@ -109,7 +109,7 @@ jobs:
         run: |
           printf "${{ secrets.USER }}\n${{ secrets.PASSWORD }}" | openvpn3 session-start --config .github/workflows/client.ovpn | grep 'Session path' | cut -d' ' -f3 > session_path.txt
           SESSION_PATH=$(cat session_path.txt)
-          # echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
+          echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
           echo "SESSION_PATH=$SESSION_PATH"
 
       - name: session-list
