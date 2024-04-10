@@ -126,7 +126,7 @@ jobs:
           script: |
             docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
             docker pull "${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG_NAME }}"
-            docker run --name "${{ secrets.CONTAINER_NAME }}" -p 4202:80 -d --rm "${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG_NAME }}"
+            docker run --name "${{ secrets.CONTAINER_NAME }}" -p 4200:80 -d --rm "${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG_NAME }}"
 
       - name: Disconnect from OpenVPN
         run: |
