@@ -95,6 +95,7 @@ jobs:
         run: |
           docker build -t "${{ secrets.IMAGE_NAME }}" .
           docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
+          docker tag "${{ secrets.IMAGE_NAME }}" "${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG_NAME }}"
           docker push "${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG_NAME }}"
 
       - name: Install OpenVPN3
