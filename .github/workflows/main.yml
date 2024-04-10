@@ -67,7 +67,7 @@ jobs:
         run: |
           SESSION_PATH=$(cat session_path.txt)
           echo "SESSION_PATH=$SESSION_PATH"
-          openvpn3 session-manage --session-path $SESSION_PATH --disconnect
+          openvpn3 session-manage --session-path "$SESSION_PATH" --disconnect
 
 # Workflow with 1 job
 # name: GitHub Action
