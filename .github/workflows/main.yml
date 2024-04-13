@@ -78,10 +78,10 @@
 #           openvpn3 session-manage --session-path "$SESSION_PATH" --disconnect
 
 # Workflow with 1 job
-name: DEMO GITHUB ACTIONS WORKFLOW
+# name: DEMO GITHUB ACTIONS WORKFLOW
 
-on:
-  workflow_dispatch:
+# on:
+#   workflow_dispatch:
 # on:
 #   pull_request:
 #     types: [opened]
@@ -92,7 +92,7 @@ on:
 #     branches:
 #       - main    
 
-jobs:
+# jobs:
   # BUILD-ANGULAR-APP:
   #   runs-on: ubuntu-latest
 
@@ -124,28 +124,28 @@ jobs:
   #         docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
   #         docker tag "${{ secrets.IMAGE_NAME }}" "${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG_NAME }}"
   #         docker push "${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG_NAME }}"
-  DEPLOY:
+  # DEPLOY:
     # needs: BUILD-AND-SHIP-DOCKER-IMAGE
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install OpenVPN3
-        run: |
-          sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://packages.openvpn.net/packages-repo.gpg | sudo tee /etc/apt/keyrings/openvpn.asc
-          DISTRO=$(lsb_release -c | awk '{print $2}')
-          echo "deb [signed-by=/etc/apt/keyrings/openvpn.asc] https://packages.openvpn.net/openvpn3/debian $DISTRO main" | sudo tee /etc/apt/sources.list.d/openvpn-packages.list
-          sudo apt update
-          sudo apt install -y openvpn3
+    # runs-on: ubuntu-latest
+    # steps:
+    #   - name: Install OpenVPN3
+    #     run: |
+    #       sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://packages.openvpn.net/packages-repo.gpg | sudo tee /etc/apt/keyrings/openvpn.asc
+    #       DISTRO=$(lsb_release -c | awk '{print $2}')
+    #       echo "deb [signed-by=/etc/apt/keyrings/openvpn.asc] https://packages.openvpn.net/openvpn3/debian $DISTRO main" | sudo tee /etc/apt/sources.list.d/openvpn-packages.list
+    #       sudo apt update
+    #       sudo apt install -y openvpn3
 
-      - name: Connect to OpenVPN
-        run: |
-          printf "${{ secrets.USER }}\n${{ secrets.PASSWORD }}" | openvpn3 session-start --config .github/workflows/client.ovpn | grep 'Session path' | cut -d' ' -f3 > session_path.txt
-          SESSION_PATH=$(cat session_path.txt)
-          echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
-          echo "SESSION_PATH=$SESSION_PATH"
+    #   - name: Connect to OpenVPN
+    #     run: |
+    #       printf "${{ secrets.USER }}\n${{ secrets.PASSWORD }}" | openvpn3 session-start --config .github/workflows/client.ovpn | grep 'Session path' | cut -d' ' -f3 > session_path.txt
+    #       SESSION_PATH=$(cat session_path.txt)
+    #       echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
+    #       echo "SESSION_PATH=$SESSION_PATH"
 
-      - name: session-list
-        run: |
-          openvpn3 sessions-list
+    #   - name: session-list
+    #     run: |
+    #       openvpn3 sessions-list
 
       # - name: Use SSH
       #   uses: appleboy/ssh-action@master
@@ -160,7 +160,41 @@ jobs:
       #       docker pull "${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG_NAME }}"
       #       docker run --name "${{ secrets.CONTAINER_NAME }}" -p 4200:80 -d --rm "${{ secrets.IMAGE_NAME }}":"${{ secrets.TAG_NAME }}"
 
-      - name: Disconnect from OpenVPN
-        run: |
-          echo "Session Path: $SESSION_PATH"
-          openvpn3 session-manage --session-path "$SESSION_PATH" --disconnect
+      # - name: Disconnect from OpenVPN
+      #   run: |
+      #     echo "Session Path: $SESSION_PATH"
+      #     openvpn3 session-manage --session-path "$SESSION_PATH" --disconnect
+
+      name: DEMO GITHUB ACTIONS WORKFLOW
+
+      on:
+        workflow_dispatch:
+      
+      jobs:
+        DEPLOY:
+          runs-on: ubuntu-latest
+          steps:
+            - name: Install OpenVPN3
+              run: |
+                sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://packages.openvpn.net/packages-repo.gpg | sudo tee /etc/apt/keyrings/openvpn.asc
+                DISTRO=$(lsb_release -c | awk '{print $2}')
+                echo "deb [signed-by=/etc/apt/keyrings/openvpn.asc] https://packages.openvpn.net/openvpn3/debian $DISTRO main" | sudo tee /etc/apt/sources.list.d/openvpn-packages.list
+                sudo apt update
+                sudo apt install -y openvpn3
+      
+            - name: Connect to OpenVPN
+              run: |
+                printf "${{ secrets.USER }}\n${{ secrets.PASSWORD }}" | openvpn3 session-start --config .github/workflows/client.ovpn | grep 'Session path' | cut -d' ' -f3 > session_path.txt
+                SESSION_PATH=$(cat session_path.txt)
+                echo "SESSION_PATH=$SESSION_PATH" >> $GITHUB_ENV
+                echo "SESSION_PATH=$SESSION_PATH"
+      
+            - name: session-list
+              run: |
+                openvpn3 sessions-list
+      
+            - name: Disconnect from OpenVPN
+              run: |
+                echo "Session Path: $SESSION_PATH"
+                openvpn3 session-manage --session-path "$SESSION_PATH" --disconnect
+      
